@@ -1,0 +1,268 @@
+diff --git a/Gemfile b/Gemfile
+index cb8ceac..f2b6ba2 100644
+--- a/Gemfile
++++ b/Gemfile
+@@ -1,21 +1,12 @@
+ source 'https://rubygems.org'
+-ruby '2.1.3'
++
+ 
+ # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+ gem 'rails', '4.1.12'
+-
+-
+ # Use sqlite3 as the database for Active Record
+ group :development,:test do
+-	gem 'rspec-rails','2.13.1'
+ 	gem 'sqlite3','1.3.8'
+-	####
+-	#gem 'spork-rails','4.0.0'
+-	#gem 'guard-spork','1.5.0'
+-	#gem 'childprocess','0.5.9'
+-	#gem 'guard'
+-	#gem 'guard-minitest'
+-	#gem 'guard-rspec','2.5.0'
++	gem 'rspec-rails','2.13.1'
+ end
+ 
+ group :test do
+@@ -31,7 +22,7 @@ gem 'uglifier', '>= 1.3.0'
+ gem 'coffee-rails', '~> 4.0.0'
+ # See https://github.com/rails/execjs#readme for more supported runtimes
+ # gem 'therubyracer',  platforms: :ruby
+-#gem 'listen','3.0.8'
++
+ # Use jquery as the JavaScript library
+ gem 'jquery-rails'
+ # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
+@@ -45,11 +36,9 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
+ gem 'spring',        group: :development
+ 
+ group :production do
+-	gem 'pg'
++  gem 'pg', '0.15.1'
+ end
+ 
+-
+-
+ # Use ActiveModel has_secure_password
+ # gem 'bcrypt', '~> 3.1.7'
+ 
+diff --git a/Gemfile.lock b/Gemfile.lock
+index b042632..322e79c 100644
+--- a/Gemfile.lock
++++ b/Gemfile.lock
+@@ -68,7 +68,7 @@ GEM
+     nokogiri (1.6.8)
+       mini_portile2 (~> 2.1.0)
+       pkg-config (~> 1.1.7)
+-    pg (0.18.4)
++    pg (0.15.1)
+     pkg-config (1.1.7)
+     rack (1.5.5)
+     rack-test (0.6.3)
+@@ -150,7 +150,7 @@ DEPENDENCIES
+   coffee-rails (~> 4.0.0)
+   jbuilder (~> 2.0)
+   jquery-rails
+-  pg
++  pg (= 0.15.1)
+   rails (= 4.1.12)
+   rspec-rails (= 2.13.1)
+   sass-rails (~> 4.0.3)
+@@ -161,8 +161,5 @@ DEPENDENCIES
+   turbolinks
+   uglifier (>= 1.3.0)
+ 
+-RUBY VERSION
+-   ruby 2.1.3p242
+-
+ BUNDLED WITH
+    1.12.5
+diff --git a/Guardfile b/Guardfile
+deleted file mode 100644
+index 06d1367..0000000
+--- a/Guardfile
++++ /dev/null
+@@ -1,16 +0,0 @@
+-# A sample Guardfile
+-# More info at https://github.com/guard/guard#readme
+-
+-## Uncomment and set this to only include directories you want to watch
+-# directories %w(app lib config test spec features) \
+-#  .select{|d| Dir.exists?(d) ? d : UI.warning("Directory #{d} does not exist")}
+-
+-## Note: if you are using the `directories` clause above and you are not
+-## watching the project directory ('.'), then you will want to move
+-## the Guardfile to a watched dir and symlink it back, e.g.
+-#
+-#  $ mkdir config
+-#  $ mv Guardfile config/
+-#  $ ln -s config/Guardfile .
+-#
+-# and, you'll have to watch "config/Guardfile" instead of "Guardfile"
+diff --git a/app/controllers/static_pages_controller.rb b/app/controllers/static_pages_controller.rb
+index 9cc8f8f..19f79a9 100644
+--- a/app/controllers/static_pages_controller.rb
++++ b/app/controllers/static_pages_controller.rb
+@@ -7,8 +7,4 @@ class StaticPagesController < ApplicationController
+ 
+   def about
+   end
+-
+-  def contact
+-  end
+-  
+ end
+diff --git a/app/views/static_pages/contact.html.erb b/app/views/static_pages/contact.html.erb
+deleted file mode 100644
+index 663d0f9..0000000
+--- a/app/views/static_pages/contact.html.erb
++++ /dev/null
+@@ -1,15 +0,0 @@
+-<% provide(:title, 'Contact') %>
+-<!DOCTYPE html>
+-<html>
+-  <head>
+-  </head>
+-  <body>
+-    <h1>Contact</h1>
+-    <p>
+-      The <a href="http://railstutorial.org/">Ruby on Rails Tutorial</a>
+-      is a project to make a book and screencasts to teach web development
+-      with <a href="http://rubyonrails.org/">Ruby on Rails</a>. This 
+-      is the sample application for the tutorial.
+-    </p>
+-  </body>
+-</html>
+\ No newline at end of file
+diff --git a/config/routes.rb b/config/routes.rb
+index 5416cd8..447f966 100644
+--- a/config/routes.rb
++++ b/config/routes.rb
+@@ -2,7 +2,6 @@ Rails.application.routes.draw do
+   get 'static_pages/home'
+   get 'static_pages/about'
+   get 'static_pages/help'
+-  get 'static_pages/contact'
+ 
+   # The priority is based upon order of creation: first created -> highest priority.
+   # See how all your routes lay out with "rake routes".
+diff --git a/spec/requests/static_pages_spec.rb b/spec/requests/static_pages_spec.rb
+index be78335..cfed60b 100644
+--- a/spec/requests/static_pages_spec.rb
++++ b/spec/requests/static_pages_spec.rb
+@@ -1,7 +1,5 @@
+ require 'spec_helper'
+ describe "Static pages" do
+-  
+-  let(:base_title){"Ruby on Rails Tutorial Sample App"}
+ 
+   describe "Home page" do
+ 
+@@ -12,26 +10,11 @@ describe "Static pages" do
+ 
+ 	it "should have the right title" do
+   	  visit '/static_pages/home'
+-  	  expect(page).to have_title(" #{base_title} | Home")
++  	  expect(page).to have_title("Ruby on Rails Tutorial Sample App | Home")
+ 	end
+ 
+   end
+ 
+-  describe "Contact page" do
+-
+-    it "should have the content 'Contact'" do
+-      visit '/static_pages/contact'
+-      expect(page).to have_content('Contact')
+-	end
+-
+-	it "should have the right title" do
+-  	  visit '/static_pages/contact'
+-  	  expect(page).to have_title("#{base_title} | Contact")
+-	end
+-
+-  end
+-
+-
+   describe "Help Page" do
+   	
+   	it "should have the content 'Help'" do
+@@ -41,7 +24,7 @@ describe "Static pages" do
+ 
+   	it "should have the title 'Help'" do
+       visit '/static_pages/help'
+-      expect(page).to have_title("#{base_title} | Help")
++      expect(page).to have_title("Ruby on Rails Tutorial Sample App | Help")
+ 	end
+ 
+   end
+@@ -56,7 +39,7 @@ describe "Static pages" do
+ 
+   	it "should have the title 'About Us'" do
+       visit '/static_pages/about'
+-      expect(page).to have_title("#{base_title} | About Us")
++      expect(page).to have_title("Ruby on Rails Tutorial Sample App | About Us")
+     end
+     
+   end
+diff --git a/spec/spec_helper.rb b/spec/spec_helper.rb
+index 0af4d80..031f92c 100644
+--- a/spec/spec_helper.rb
++++ b/spec/spec_helper.rb
+@@ -1,49 +1,3 @@
+-require 'rubygems'
+-#require 'spork'
+-#uncomment the following line to use spork with the debugger
+-#require 'spork/ext/ruby-debug'
+-
+-#Spork.prefork do
+-  # Loading more in this block will cause your tests to run faster. However,
+-  # if you change any configuration or code from libraries loaded here, you'll
+-  # need to restart spork for it take effect.
+-  
+-
+-
+-#end
+-
+-#Spork.each_run do
+-  # This code will be run each time you run your specs.
+-#end
+-
+-# --- Instructions ---
+-# Sort the contents of this file into a Spork.prefork and a Spork.each_run
+-# block.
+-#
+-# The Spork.prefork block is run only once when the spork server is started.
+-# You typically want to place most of your (slow) initializer code in here, in
+-# particular, require'ing any 3rd-party gems that you don't normally modify
+-# during development.
+-#
+-# The Spork.each_run block is run each time you run your specs.  In case you
+-# need to load files that tend to change during development, require them here.
+-# With Rails, your application modules are loaded automatically, so sometimes
+-# this block can remain empty.
+-#
+-# Note: You can modify files loaded *from* the Spork.each_run block without
+-# restarting the spork server.  However, this file itself will not be reloaded,
+-# so if you change any of the code inside the each_run block, you still need to
+-# restart the server.  In general, if you have non-trivial code in this file,
+-# it's advisable to move it into a separate file so you can easily edit it
+-# without restarting spork.  (For example, with RSpec, you could move
+-# non-trivial code into a file spec/support/my_helper.rb, making sure that the
+-# spec/support/* files are require'd from inside the each_run block.)
+-#
+-# Any code that is left outside the two blocks will be run during preforking
+-# *and* during each_run -- that's probably not what you want.
+-#
+-# These instructions should self-destruct in 10 seconds.  If they don't, feel
+-# free to delete them.
+ # This file is copied to spec/ when you run 'rails generate rspec:install'
+ ENV["RAILS_ENV"] ||= 'test'
+ require File.expand_path("../../config/environment", __FILE__)
+@@ -87,5 +41,3 @@ RSpec.configure do |config|
+   config.order = "random"
+   config.include Capybara::DSL
+ end
+-
+-
