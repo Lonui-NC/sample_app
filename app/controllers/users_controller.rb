@@ -3,8 +3,13 @@ class UsersController < ApplicationController
   before_action :correct_user, only: [:edit,:update]
   before_action :admin_user, only: :destroy
 
+  #redirect to
   def new
-  	@user=User.new
+    if signed_in?
+      redirect_to root_path
+    else
+  	 @user=User.new
+    end
   end
 
   def index

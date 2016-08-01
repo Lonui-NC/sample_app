@@ -35,12 +35,13 @@ module SessionsHelper
 	end
 
 
-
+	#use store to redirect
 	def redirect_back_or(default)
 		redirect_to(session[:return_to] || default)
 		session.delete(:return_to)
 	end
 
+	#only store when get 
 	def store_location
 		session[:return_to]=request.fullpath if request.get?
 	end

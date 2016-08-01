@@ -19,6 +19,18 @@ describe "AuthenticationPages" do
       end    
     end
 
+    describe "should not delete admin itself" do
+        let(:admin){FactoryGirl.create(:admin)}
+        before do
+          sign_in admin
+        end  
+        it "could not delete itself " do
+          expect do
+            delete user_path(admin)
+          end.not_to change(User,:count)
+        end
+
+    end
 
 
 
@@ -49,6 +61,7 @@ describe "AuthenticationPages" do
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
 
+
       describe "when attempting to visit a protected page" do
         before do
           visit edit_user_path(user)
@@ -62,6 +75,21 @@ describe "AuthenticationPages" do
           it "should render the desired protected page" do
             expect(page).to have_title("Edit user")
           end
+
+          describe "when signing in again" do
+            before do
+              delete signout_path
+              visit signin_path
+              fill_in "Email", with: user.email
+              fill_in "Password",with: user.password
+              click_button "Sign in"
+            end
+            #because it only when get that store old path
+            it "should render the default (profile) page" do
+              expect(page).to have_title(user.name)
+            end
+          end
+
         end
       end
 
@@ -117,6 +145,22 @@ describe "AuthenticationPages" do
 
    		end
 
+      #####change here
+      describe "no see Profile and Settings before sign in" do
+        let(:user) {FactoryGirl.create(:user)}
+        before do
+          #sign_out 
+        end
+
+        it { should_not have_title(user.name) }
+        it { should_not have_link('Users',href:users_path)}
+        it { should_not have_link('Profile', href:user_path(user))}
+        it { should_not have_link('Settings',href: edit_user_path(user))}
+        it { should_not have_link('Sign out',href:signout_path)}
+        it { should have_link('Sign in', href:signin_path)}
+        
+      end
+      #######change here
 
    		describe "with valid information" do
    			let(:user) {FactoryGirl.create(:user)}
