@@ -8,6 +8,24 @@
       <section>
         <%= render 'shared/micropost_form' %>
       </section>
+
+  <script type="text/javascript">  
+        var textareaobj=document.getElementById('micropost_content');  
+        textareaobj.onkeydown=function(){  
+        checklastword();  
+          }  
+  
+        textareaobj.onkeyup=function(){  
+        checklastword();  
+        }  
+  
+        function checklastword(){  
+        var lastwordnum=140-textareaobj.value.length;  
+        if(lastwordnum>=0) document.getElementById('lastwordnum').value=lastwordnum+"/140";  
+        if(lastwordnum < 1) textareaobjtextareaobj.value= textareaobj.value.substr(0,140);  
+        }//test  
+  </script>  
+
     </aside>
     <div class="span8">
       <h3>Micropost Feed</h3>
